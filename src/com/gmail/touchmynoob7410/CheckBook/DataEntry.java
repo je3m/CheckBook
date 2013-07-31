@@ -202,9 +202,8 @@ public class DataEntry extends Activity {
 		
 		
 	try {
-	
-		String amountFloat = String.format("%.f", amountOBJ.getText().toString());
-		final float amount = Float.parseFloat(amountFloat);
+		String amountString = amountOBJ.getText().toString().replace(",", ""); // used to take the "," out so parse can be successful
+		final float amount = Float.parseFloat(amountString);
 		newSave.setAmount(amount);
 	} catch (NumberFormatException e) {
 		showAlert("There is no amount entered", "Error", "Okay", null, null);
