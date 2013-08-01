@@ -28,9 +28,9 @@ public final class R {
         public static final int AmountTextView=0x7f080006;
         public static final int CHECK_NUMBER=0x7f08000c;
         public static final int DEPOSIT=0x7f080003;
-        public static final int ENTRYBTN=0x7f080012;
-        public static final int ENTRYHISTORYBTN=0x7f080011;
+        public static final int ENTRYBTN=0x7f080011;
         public static final int EXPENSE=0x7f080002;
+        public static final int HISTORYBTN=0x7f080012;
         public static final int MEMO=0x7f08000a;
         public static final int RECIPIENT=0x7f080005;
         public static final int RadioGroup1=0x7f080001;
@@ -48,6 +48,7 @@ public final class R {
     public static final class layout {
         public static final int activity_entry=0x7f030000;
         public static final int activity_main=0x7f030001;
+        public static final int transaction_history=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f070000;

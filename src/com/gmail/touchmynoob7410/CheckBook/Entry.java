@@ -102,10 +102,10 @@ public class Entry implements Serializable{
 		setDate();
 		int i = 1;
 		
-			File saveFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + i + ".sav");
+			File saveFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + i + ".ser");
 			
 		while (saveFile.exists()){
-			File newFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + i + ".sav");
+			File newFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + i + ".ser");
 			saveFile = newFile;
 			i++;
 			

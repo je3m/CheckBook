@@ -20,36 +20,37 @@ public class MainActivity extends Activity {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
         
-        final Button newEntry = (Button) findViewById(R.id.ENTRYBTN);
-        final Button entryHistory = (Button) findViewById(R.id.ENTRYHISTORYBTN);
-        final Intent dataEntry = new Intent(getApplicationContext(), DataEntry.class);       
+        final Button newEntryBTN = (Button) findViewById(R.id.ENTRYBTN),
+        	historyBTN = (Button) findViewById(R.id.HISTORYBTN);
+        final Intent dataEntry = new Intent(getApplicationContext(), DataEntry.class);   
+        final Intent history = new Intent(getApplicationContext(), History.class);
      /*
 	  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	  * Methods
 	  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	  */
-        newEntry.setOnClickListener(new OnClickListener() {
+        
+        OnClickListener listener = new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				switch (v.getId()){
 				
 					case R.id.ENTRYBTN:
-						
 						startActivity(dataEntry);
-						finish();
-						
 						break;
 						
-					case R.id.ENTRYHISTORYBTN:
-						//need to make new activity
+					case R.id.HISTORYBTN:
+						startActivity(history);
 						break;
 				}
 				
 				
 			}
-		});
-				
+		};
+			newEntryBTN.setOnClickListener(listener);
+			historyBTN.setOnClickListener(listener);
+			
     }
 
 
