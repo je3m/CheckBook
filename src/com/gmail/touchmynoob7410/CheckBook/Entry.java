@@ -27,7 +27,7 @@ public class Entry implements Serializable{
 	private int month,
 	day, 
 	year;
-	private int[] date;
+	private String[] date;
 	boolean deposit;
 	
 	/*
@@ -41,11 +41,14 @@ public class Entry implements Serializable{
 	public void setDeposit(boolean deposit) {
 		this.deposit = deposit;
 	}
-	public int[] getDate() {
+	public String[] getDate() {
 		return date;
 	}
 	public void setDate() {
-		date = new int[] {month, day, year};
+		Integer dateMonth = (Integer) month;
+		Integer dateDay = (Integer) day;
+		Integer dateYear = (Integer) year;
+		date = new String[] {(dateMonth.toString()), (dateDay.toString()), (dateYear.toString())};
 	}
 	public int getYear() {
 		return year;

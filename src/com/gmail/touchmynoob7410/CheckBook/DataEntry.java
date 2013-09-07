@@ -193,7 +193,7 @@ public class DataEntry extends Activity {
 		newSave.setDeposit(deposit);
 		
 		if (expenseOBJ.isChecked()){
-			final String recipient = recipientOBJ.toString();
+			final String recipient = recipientOBJ.getText().toString();
 			newSave.setRecipient(recipient);
 		}
 		
