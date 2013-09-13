@@ -5,10 +5,10 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,13 +21,21 @@ import android.widget.TextView;
 
 public class History extends Activity{
 	private File savedFile;
-	private ArrayList<Entry> list;
-	private ArrayList<Float> moneyList;
+	private ArrayList<Entry> list; //Stores saved Entry objects
+	private ArrayList<Float> moneyList; //used to store Money values
 	private AlertDialog.Builder alert;
 	ProgressDialog progress;
-	private TextView moneyOBJ;
-	int count = 1;
+	private TextView moneyOBJ; // textView at top of screen
+	int count = 1; //used to iterate through file reading
+	public float sum = 0; //used to Calculate balance  
+	boolean loaded;
 	
+	
+	
+	
+	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	 * onCreate
+	 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.transaction_history);
@@ -39,40 +47,41 @@ public class History extends Activity{
 		 * Object references
 		 */
 		alert = new AlertDialog.Builder(this);
-		moneyOBJ = (TextView) findViewById(R.id.totalMoney);
+		moneyOBJ = (TextView) findViewById(R.id.moneyAmount);
 		savedFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + count + ".ser");
 		list = new ArrayList<Entry>();
+		moneyList = new ArrayList<Float>();
 		progress = new ProgressDialog(this);
 		
 		
 		/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		 * End of variables
 		 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-				
-		if (savedFile.exists()){
-			progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progress.setTitle("Loading entries");
-			progress.setCancelable(false);
-			progress.show();
-			while(savedFile.exists()){
-				list.add(load(count));
-				count++;
-				savedFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + count + ".ser");		
-			}
-			progress.dismiss();
-			alert.setTitle("Success!")
-			.setMessage("Files loaded sucessfully!")
-			.setNeutralButton("Okay", null)
-			.show();
-		} else {
-			alert.setTitle("Error")
-			.setMessage("No files found")
-			.setNeutralButton("Okay", null)
-			.show();
+		if (!this.loaded){
+			if (savedFile.exists()){
+				progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				progress.setTitle("Loading entries");
+				progress.setCancelable(false);
+				progress.show();
+				while(savedFile.exists()){
+					list.add(load(count));
+					count++;
+					savedFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + count + ".ser");		
+				}
+				progress.dismiss();
+				alert.setTitle("Success!")
+				.setMessage("Files loaded sucessfully!")
+				.setNeutralButton("Okay", null)
+				.show();
+			} else {
+				alert.setTitle("Error")
+				.setMessage("No files found")
+				.setNeutralButton("Okay", null)
+				.show();
+			}			
 		}
 		
-		
-		
+		loaded = true;
 		
 		//reading data
 		boolean color = true;
@@ -80,7 +89,11 @@ public class History extends Activity{
 			printEntry(entry, color);
 			
 			//populating moneyList arrayList
-			
+			if (entry.isDeposit()){
+				moneyList.add(entry.getAmount());
+			} else {
+				moneyList.add(-entry.getAmount());
+			}
 			
 			if (color){
 				color = false;
@@ -90,13 +103,29 @@ public class History extends Activity{
 		}
 		
 		//add all amounts together
+		for (Float cash: moneyList){
+			sum = sum + cash;
+		}
+		
+			
+		//printing sum onto head
+		moneyOBJ.setText("" + String.format("%,.2f", sum));
+		
+		//setting color of balance
+		if (sum > 0){
+			moneyOBJ.setTextColor(Color.GREEN);
+		} else if (sum <0){
+			moneyOBJ.setTextColor(Color.RED);
+		} else {
+			moneyOBJ.setTextColor(Color.BLACK);
+		}
 		
 		
 		super.onCreate(savedInstanceState);
 	}
 	
 	//used to generate the GUI
-	@SuppressLint("NewApi")
+	
 	private void printEntry(Entry e, boolean c){
 		//table object to be used 
 		TableLayout table = (TableLayout) findViewById(R.id.TableLayout);
@@ -108,48 +137,73 @@ public class History extends Activity{
 		TextView amount = new TextView(this);
 		
 		//Information to be printed
-		recepient.setText(e.getRecipient().toString());
+		recepient.setText(checkSize(e.getRecipient().toString()));
+		
 		String[] dateString = e.getDate();
 		date.setText(" " + dateString[0] + "/" + dateString[1] + "/" + dateString[2] + " ");
 		if (e.isDeposit()){
-			amount.setText("-" + e.getAmount());
-		} else{
 			amount.setText("+" + e.getAmount());
+		} else{
+			amount.setText("-" + e.getAmount());
 		}
 		
 		//formatting text
 		
 		recepient.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
-		date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+		date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 		amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+		
+		recepient.setGravity(Gravity.LEFT);
+		date.setGravity(Gravity.CENTER);
+		amount.setGravity(Gravity.RIGHT);
 		
 		recepient.setPadding(10, 10, 10, 10);
 		date.setPadding(10, 10, 10, 10);
 		amount.setPadding(10, 10, 10, 10);
 		
+		
 		recepient.setTextColor(Color.BLUE);
-		if (e.isDeposit()){
+		if (!e.isDeposit()){
 			amount.setTextColor(Color.RED);
 		} else {
 			amount.setTextColor(Color.GREEN);
 		}
-		
-				
+			
 		//add stuff to individual row
+				
 		row.addView(recepient);
 		row.addView(date);
 		row.addView(amount);
 		
-		table.addView(row, new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		table.addView(row, new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		
 		//row formatting
 		if (c){
 			row.setBackgroundColor(Color.GRAY);
 		}
-		row.setGravity(Gravity.CENTER_HORIZONTAL);
+		
+		LayoutParams rowLayout = new LayoutParams();
+		rowLayout.width = LayoutParams.MATCH_PARENT;
+		rowLayout.weight = 0;
+		row.setLayoutParams(rowLayout);
 		
 	}
-	
+	public String checkSize(String name){
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ){ //if landscape view
+				if (name.length() > 8){
+					char[] chars = new char[8];
+					for (int i = 0; i < 5; i++){
+						chars[i] = name.charAt(i);
+					}
+					chars[5] = '.';
+					chars[6] = '.';
+					chars[7] = '.';
+					name = new String(chars);
+				}
+				
+			}
+			return name;
+	}
 	public Entry load(int i){
 
 			savedFile = new File(Environment.getExternalStorageDirectory() + "/CheckBook/", "Entry" + i + ".ser");

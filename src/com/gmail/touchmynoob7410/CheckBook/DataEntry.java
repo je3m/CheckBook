@@ -13,8 +13,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -130,21 +128,7 @@ public class DataEntry extends Activity {
 				return false;
 			}
 		});
-		/*
-		 * Listener to enable/disable the recipientOBJ
-		 */
-		expenseOBJ.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked){
-					recipientOBJ.setEnabled(true);
-				} else {
-					recipientOBJ.setEnabled(false);
-				}			
-			}
-		});
-		
+				
 		/*
 		 * Listener for the save button
 		 */
@@ -192,11 +176,9 @@ public class DataEntry extends Activity {
 		final boolean deposit = expenseOBJ.isChecked(); 
 		newSave.setDeposit(deposit);
 		
-		if (expenseOBJ.isChecked()){
-			final String recipient = recipientOBJ.getText().toString();
-			newSave.setRecipient(recipient);
-		}
-		
+		final String recipient = recipientOBJ.getText().toString();
+		newSave.setRecipient(recipient);
+	
 		final String memo = memoOBJ.toString();
 		newSave.setMemo(memo);
 		

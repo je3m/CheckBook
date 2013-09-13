@@ -21,7 +21,7 @@ public class Entry implements Serializable{
 	private static final long serialVersionUID = -1128155909267684079L;
 	
 	private int	checkNumber;
-	private float amount;
+	private Float amount;
 	private String recipient,
 	memo;
 	private int month,
@@ -62,7 +62,7 @@ public class Entry implements Serializable{
 	public void setDay(int day) {
 		this.day = day;
 	}
-	public float getAmount() {
+	public Float getAmount() {
 		return amount;
 	}
 	public void setAmount(float amount) {

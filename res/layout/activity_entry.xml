@@ -30,7 +30,7 @@
                     android:id="@+id/EXPENSE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Expense" />
+                    android:text="Received" />
 
                 <RadioButton
                     android:id="@+id/DEPOSIT"
@@ -38,11 +38,11 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:checked="false"
-                    android:text="Deposit" />
+                    android:text="Spent" />
             </RadioGroup>
 
             <TextView
-                android:id="@+id/totalMoney"
+                android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recipient" />
